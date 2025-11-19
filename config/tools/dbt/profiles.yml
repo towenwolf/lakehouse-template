@@ -1,0 +1,101 @@
+# dbt Profiles Configuration Template
+# This file contains connection details for various data warehouses
+# Copy to ~/.dbt/profiles.yml and customize with your credentials
+
+lakehouse:
+  target: dev
+  outputs:
+    
+    # Snowflake configuration
+    snowflake_dev:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE', 'TRANSFORMER') }}"
+      database: lakehouse_dev
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'COMPUTE_WH') }}"
+      schema: public
+      threads: 4
+      client_session_keep_alive: False
+    
+    # Databricks configuration
+    databricks_dev:
+      type: databricks
+      catalog: lakehouse_dev
+      schema: default
+      host: "{{ env_var('DATABRICKS_HOST') }}"
+      http_path: "{{ env_var('DATABRICKS_HTTP_PATH') }}"
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      threads: 4
+    
+    # BigQuery configuration
+    bigquery_dev:
+      type: bigquery
+      method: service-account
+      project: "{{ env_var('GCP_PROJECT') }}"
+      dataset: lakehouse_dev
+      threads: 4
+      keyfile: "{{ env_var('GCP_KEYFILE_PATH') }}"
+      location: US
+      priority: interactive
+      retries: 1
+    
+    # Redshift configuration
+    redshift_dev:
+      type: redshift
+      host: "{{ env_var('REDSHIFT_HOST') }}"
+      user: "{{ env_var('REDSHIFT_USER') }}"
+      password: "{{ env_var('REDSHIFT_PASSWORD') }}"
+      port: 5439
+      dbname: lakehouse_dev
+      schema: public
+      threads: 4
+    
+    # PostgreSQL configuration
+    postgres_dev:
+      type: postgres
+      host: "{{ env_var('POSTGRES_HOST', 'localhost') }}"
+      user: "{{ env_var('POSTGRES_USER') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD') }}"
+      port: 5432
+      dbname: lakehouse_dev
+      schema: public
+      threads: 4
+    
+    # Spark/Hive configuration
+    spark_dev:
+      type: spark
+      method: thrift
+      host: "{{ env_var('SPARK_HOST', 'localhost') }}"
+      port: 10000
+      schema: default
+      threads: 4
+    
+    # DuckDB configuration (local development)
+    duckdb_dev:
+      type: duckdb
+      path: 'lakehouse.duckdb'
+      threads: 4
+    
+    # Default development target
+    dev:
+      type: postgres  # Change to your preferred warehouse
+      host: "{{ env_var('DB_HOST', 'localhost') }}"
+      user: "{{ env_var('DB_USER', 'postgres') }}"
+      password: "{{ env_var('DB_PASSWORD') }}"
+      port: 5432
+      dbname: lakehouse_dev
+      schema: public
+      threads: 4
+    
+    # Production target
+    prod:
+      type: postgres  # Change to your preferred warehouse
+      host: "{{ env_var('DB_HOST_PROD') }}"
+      user: "{{ env_var('DB_USER_PROD') }}"
+      password: "{{ env_var('DB_PASSWORD_PROD') }}"
+      port: 5432
+      dbname: lakehouse_prod
+      schema: public
+      threads: 8

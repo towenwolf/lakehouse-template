@@ -1,0 +1,58 @@
+# Prometheus Monitoring Configuration Template
+# Configure Prometheus to scrape metrics from your lakehouse components
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'lakehouse-prod'
+    environment: 'production'
+
+# Alert manager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "alerts/*.yaml"
+
+# Scrape configurations
+scrape_configs:
+  # Spark metrics
+  - job_name: 'spark'
+    static_configs:
+      - targets: ['spark-master:4040', 'spark-worker:4041']
+    metrics_path: '/metrics/prometheus'
+    
+  # JMX Exporter for Spark
+  - job_name: 'spark-jmx'
+    static_configs:
+      - targets: ['spark-master:8080', 'spark-worker:8081']
+  
+  # Python application metrics (using prometheus_client)
+  - job_name: 'python-app'
+    static_configs:
+      - targets: ['localhost:8000']
+  
+  # Airflow metrics
+  - job_name: 'airflow'
+    static_configs:
+      - targets: ['airflow-webserver:8080']
+    metrics_path: '/admin/metrics'
+  
+  # Node exporter for system metrics
+  - job_name: 'node'
+    static_configs:
+      - targets: ['localhost:9100']
+  
+  # Custom lakehouse metrics
+  - job_name: 'lakehouse-metrics'
+    static_configs:
+      - targets: ['localhost:9090']
+    metric_relabel_configs:
+      - source_labels: [__name__]
+        regex: 'lakehouse_.*'
+        action: keep

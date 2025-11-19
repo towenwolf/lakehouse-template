@@ -1,0 +1,74 @@
+# Logging Configuration Template
+# This is a tool-agnostic logging configuration that can be adapted for various frameworks
+
+version: 1
+disable_existing_loggers: false
+
+formatters:
+  standard:
+    format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  detailed:
+    format: '%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(funcName)s - %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+  
+  json:
+    format: '{"timestamp": "%(asctime)s", "logger": "%(name)s", "level": "%(levelname)s", "message": "%(message)s", "file": "%(filename)s", "line": %(lineno)d}'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: INFO
+    formatter: standard
+    stream: ext://sys.stdout
+  
+  file:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: detailed
+    filename: logs/lakehouse.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+  
+  error_file:
+    class: logging.handlers.RotatingFileHandler
+    level: ERROR
+    formatter: detailed
+    filename: logs/lakehouse_error.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+  
+  json_file:
+    class: logging.handlers.RotatingFileHandler
+    level: INFO
+    formatter: json
+    filename: logs/lakehouse_json.log
+    maxBytes: 10485760  # 10MB
+    backupCount: 5
+
+loggers:
+  lakehouse:
+    level: DEBUG
+    handlers: [console, file, error_file]
+    propagate: false
+  
+  lakehouse.ingestion:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  lakehouse.transformation:
+    level: DEBUG
+    handlers: [console, file]
+    propagate: false
+  
+  lakehouse.quality:
+    level: INFO
+    handlers: [console, file, error_file]
+    propagate: false
+
+root:
+  level: INFO
+  handlers: [console, file]

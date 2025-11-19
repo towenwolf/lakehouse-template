@@ -1,0 +1,118 @@
+# Prefect Configuration Template for Lakehouse
+
+# Prefect Server Settings
+server:
+  api:
+    host: 0.0.0.0
+    port: 4200
+  
+# Prefect Cloud Settings (alternative to self-hosted server)
+# Uncomment and configure if using Prefect Cloud
+# cloud:
+#   api: https://api.prefect.cloud
+#   account_id: your-account-id
+#   workspace_id: your-workspace-id
+
+# Agent Configuration
+agent:
+  query_interval: 5
+  prefetch_seconds: 10
+  
+  # Work pool configuration
+  work_pool:
+    name: "lakehouse-pool"
+    type: "process"  # Options: process, docker, kubernetes, etc.
+
+# Storage Configuration
+storage:
+  # Local storage
+  local:
+    path: "./flows"
+  
+  # S3 storage (alternative)
+  # s3:
+  #   bucket: "my-prefect-flows"
+  #   key_prefix: "lakehouse/"
+  
+  # Azure Blob storage (alternative)
+  # azure:
+  #   container: "prefect-flows"
+  #   connection_string: "${AZURE_STORAGE_CONNECTION_STRING}"
+  
+  # GCS storage (alternative)
+  # gcs:
+  #   bucket: "my-prefect-flows"
+  #   key_prefix: "lakehouse/"
+
+# Infrastructure Configuration
+infrastructure:
+  # Process infrastructure
+  process:
+    working_dir: "."
+    stream_output: true
+  
+  # Docker infrastructure (alternative)
+  # docker:
+  #   image: "prefecthq/prefect:2-python3.11"
+  #   image_pull_policy: "ALWAYS"
+  #   networks: ["prefect-network"]
+  
+  # Kubernetes infrastructure (alternative)
+  # kubernetes:
+  #   namespace: "prefect"
+  #   image: "prefecthq/prefect:2-python3.11"
+  #   service_account_name: "prefect-worker"
+
+# Task Runner Configuration
+task_runner:
+  type: "concurrent"  # Options: concurrent, sequential, dask, ray
+  
+  # Dask configuration (alternative)
+  # dask:
+  #   cluster_type: "local"
+  #   n_workers: 4
+
+# Logging Configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(levelname)-7s | %(name)s - %(message)s"
+  
+  # Log to file
+  handlers:
+    file:
+      level: "INFO"
+      filename: "logs/prefect.log"
+      maxBytes: 10485760  # 10MB
+      backupCount: 5
+
+# Result Storage
+results:
+  storage_block: "local-file-system"
+  persist_result: true
+
+# Retry Settings
+retry:
+  max_retries: 3
+  retry_delay_seconds: 60
+
+# Notification Settings
+notifications:
+  # Slack notifications (example)
+  # slack:
+  #   webhook_url: "${SLACK_WEBHOOK_URL}"
+  #   states: ["FAILED", "CRASHED"]
+  
+  # Email notifications (example)
+  # email:
+  #   smtp_server: "smtp.gmail.com"
+  #   smtp_port: 587
+  #   from_email: "alerts@example.com"
+  #   to_emails: ["team@example.com"]
+
+# Custom Settings
+lakehouse:
+  data_quality_threshold: 0.85
+  max_processing_time_minutes: 60
+  bronze_retention_days: 90
+  silver_retention_days: 180
+  gold_retention_days: 365

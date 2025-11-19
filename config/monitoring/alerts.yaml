@@ -1,0 +1,85 @@
+# Prometheus Alert Rules for Lakehouse Monitoring
+
+groups:
+  - name: lakehouse_alerts
+    interval: 30s
+    rules:
+      # High error rate
+      - alert: HighErrorRate
+        expr: rate(lakehouse_errors_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value }} errors per second for {{ $labels.component }}"
+      
+      # Pipeline failure
+      - alert: PipelineFailure
+        expr: lakehouse_pipeline_status{status="failed"} > 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pipeline {{ $labels.pipeline_name }} failed"
+          description: "Pipeline {{ $labels.pipeline_name }} has failed. Check logs for details."
+      
+      # Data quality degradation
+      - alert: DataQualityDegradation
+        expr: lakehouse_data_quality_score < 0.85
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Data quality score below threshold"
+          description: "Data quality score for {{ $labels.dataset }} is {{ $value }}, below the 0.85 threshold"
+      
+      # Slow processing
+      - alert: SlowProcessing
+        expr: histogram_quantile(0.95, rate(lakehouse_processing_duration_seconds_bucket[5m])) > 300
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Processing time exceeds threshold"
+          description: "95th percentile processing time for {{ $labels.layer }} is {{ $value }}s"
+      
+      # Data freshness issue
+      - alert: StaleData
+        expr: (time() - lakehouse_last_update_timestamp) > 7200
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Data has not been updated recently"
+          description: "Dataset {{ $labels.dataset }} has not been updated in over 2 hours"
+      
+      # Low ingestion rate
+      - alert: LowIngestionRate
+        expr: rate(lakehouse_ingestion_records_total[15m]) < 10
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Ingestion rate is unusually low"
+          description: "Ingestion rate for {{ $labels.source }} is {{ $value }} records/sec"
+      
+      # Disk space warning
+      - alert: HighDiskUsage
+        expr: lakehouse_disk_usage_percent > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Disk usage is high"
+          description: "Disk usage for {{ $labels.layer }} is {{ $value }}%"
+      
+      # Memory pressure
+      - alert: HighMemoryUsage
+        expr: lakehouse_memory_usage_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Memory usage is high"
+          description: "Memory usage for {{ $labels.component }} is {{ $value }}%"
