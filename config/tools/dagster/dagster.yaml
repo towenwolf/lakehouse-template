@@ -1,0 +1,116 @@
+# Dagster Configuration Template for Lakehouse
+
+# Storage configuration
+storage:
+  postgres:
+    postgres_db:
+      username: dagster
+      password:
+        env: DAGSTER_PG_PASSWORD
+      hostname: localhost
+      db_name: dagster
+      port: 5432
+
+# Run coordinator configuration
+run_coordinator:
+  module: dagster.core.run_coordinator
+  class: QueuedRunCoordinator
+  config:
+    max_concurrent_runs: 10
+    tag_concurrency_limits:
+      - key: "layer"
+        value: "bronze"
+        limit: 3
+      - key: "layer"
+        value: "silver"  
+        limit: 3
+      - key: "layer"
+        value: "gold"
+        limit: 2
+
+# Run launcher configuration
+run_launcher:
+  module: dagster.core.launcher
+  class: DefaultRunLauncher
+  config:
+    # For Docker:
+    # module: dagster_docker
+    # class: DockerRunLauncher
+    # config:
+    #   env_vars:
+    #     - DAGSTER_POSTGRES_USER
+    #     - DAGSTER_POSTGRES_PASSWORD
+    #   networks:
+    #     - dagster_network
+    
+    # For Kubernetes:
+    # module: dagster_k8s
+    # class: K8sRunLauncher
+    # config:
+    #   service_account_name: dagster
+    #   instance_config_map: dagster-instance
+    #   postgres_password_secret: dagster-postgresql-secret
+
+# Compute log manager
+compute_logs:
+  module: dagster.core.storage.local_compute_log_manager
+  class: LocalComputeLogManager
+  config:
+    base_dir: /opt/dagster/compute_logs
+
+# Local artifact storage
+local_artifact_storage:
+  module: dagster.core.storage.root
+  class: LocalArtifactStorage
+  config:
+    base_dir: /opt/dagster/artifacts
+
+# Scheduler configuration
+scheduler:
+  module: dagster.core.scheduler
+  class: DagsterDaemonScheduler
+
+# Sensor configuration  
+run_monitoring:
+  enabled: true
+  start_timeout_seconds: 180
+  max_resume_run_attempts: 3
+
+# Telemetry
+telemetry:
+  enabled: false
+
+# Retention configuration
+retention:
+  schedule:
+    purge_after_days:
+      skipped: 7
+      failure: 30
+      success: 30
+  sensor:
+    purge_after_days:
+      skipped: 7
+      failure: 30
+      success: 30
+
+# Code server configuration
+code_servers:
+  local_startup_timeout: 180
+  
+# Resources configuration (for workspace.yaml)
+# resources:
+#   io_manager:
+#     config:
+#       bronze_path: "data/bronze"
+#       silver_path: "data/silver"
+#       gold_path: "data/gold"
+#   
+#   data_quality:
+#     config:
+#       min_quality_score: 0.85
+#       alert_on_failure: true
+#   
+#   monitoring:
+#     config:
+#       prometheus_gateway: "localhost:9091"
+#       enable_metrics: true
