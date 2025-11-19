@@ -233,7 +233,10 @@ Import the pre-built Grafana dashboard:
 
 ## 📚 Documentation
 
+- [Quick Reference](docs/QUICK_REFERENCE.md) - Condensed cheat sheet for common tasks
 - [Architecture Overview](docs/ARCHITECTURE.md) - Detailed architecture documentation
+- [Getting Started](docs/GETTING_STARTED.md) - Step-by-step setup guide
+- [Tool Comparison](docs/TOOL_COMPARISON.md) - Compare and choose the right tools
 - [Logging Configuration](config/logging/README.md) - Logging setup guide
 - [Monitoring Configuration](config/monitoring/README.md) - Monitoring setup guide
 
