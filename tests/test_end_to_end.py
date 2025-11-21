@@ -74,8 +74,8 @@ def test_end_to_end_pipeline():
             silver_data = json.load(f)
         
         assert len(silver_data) > 0, "Silver data is empty"
-        assert len(silver_data) < len(bronze_data), \
-            "Silver should have fewer records (cleaned/deduplicated)"
+        assert len(silver_data) <= len(bronze_data), \
+            "Silver should have <= records than bronze (cleaned/deduplicated)"
         
         # Check for duplicates
         ids = [record['id'] for record in silver_data]

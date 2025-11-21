@@ -80,8 +80,8 @@ class SimpleLakehousePipeline:
             # Remove duplicates by id (simple deduplication)
             # Remove records with missing required fields
             if record.get('id') and record.get('id').strip():
-                # Create cleaned record
-                clean_record = {k: v for k, v in record.items() if v}
+                # Create cleaned record (keep all fields except None values)
+                clean_record = {k: v for k, v in record.items() if v is not None}
                 clean_record['_processed_timestamp'] = datetime.now().isoformat()
                 silver_records.append(clean_record)
         

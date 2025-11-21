@@ -2,7 +2,7 @@
 # Run the end-to-end lakehouse test
 # This script runs the minimal tracer bullet test
 
-set -e
+set -euo pipefail
 
 echo "========================================"
 echo "Lakehouse End-to-End Test"
