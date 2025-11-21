@@ -16,6 +16,7 @@ This template provides a production-ready foundation for implementing a lakehous
 - **📚 Comprehensive Documentation**: Architecture guides and best practices
 - **🔐 Security Focused**: Built-in considerations for data security and governance
 - **📈 Scalable Design**: Patterns for horizontal and vertical scaling
+- **🗂️ Unity Catalog**: Local governance solution with metadata management, lineage tracking, and audit logging
 
 ## 🚀 Quick Start
 
@@ -35,6 +36,22 @@ python3 pipelines/simple_pipeline.py
 ```
 
 This validates the Bronze → Silver → Gold flow using only Python standard library and local file storage. See [End-to-End Test Guide](docs/END_TO_END_TEST.md) for details.
+
+### 0.1. Try Unity Catalog Governance
+
+Experience end-to-end data governance with Unity Catalog:
+
+```bash
+# Run the governed pipeline with full governance tracking
+python3 pipelines/governed_pipeline.py
+
+# Explore the catalog using CLI
+python3 governance/catalog_cli.py summary
+python3 governance/catalog_cli.py describe silver customers
+python3 governance/catalog_cli.py lineage gold customers_by_region
+```
+
+This demonstrates metadata management, lineage tracking, audit logging, and data quality monitoring. See [Unity Catalog Guide](docs/UNITY_CATALOG.md) for details.
 
 ### 1. Use This Template
 
@@ -89,13 +106,23 @@ lakehouse-template/
 │   ├── bronze/                      # Raw data layer
 │   ├── silver/                      # Cleaned data layer
 │   └── gold/                        # Aggregated data layer
+├── governance/                      # Unity Catalog governance module
+│   ├── unity_catalog.py            # Main governance interface
+│   ├── metadata_store.py           # Metadata management
+│   ├── lineage_tracker.py          # Lineage tracking
+│   ├── audit_logger.py             # Audit logging
+│   ├── catalog_cli.py              # CLI tool
+│   └── README.md                    # Governance documentation
 ├── pipelines/                       # Pipeline implementations
+│   ├── simple_pipeline.py          # Basic pipeline
+│   ├── governed_pipeline.py        # Pipeline with governance
 │   └── examples/                    # Example pipelines
 │       ├── spark_pipeline.py       # Spark example
 │       ├── airflow_dag.py          # Airflow DAG example
 │       └── dbt_example_model.sql   # dbt model example
 ├── docs/                            # Documentation
-│   └── ARCHITECTURE.md             # Architecture overview
+│   ├── ARCHITECTURE.md             # Architecture overview
+│   └── UNITY_CATALOG.md            # Unity Catalog guide
 └── README.md                        # This file
 ```
 
@@ -245,11 +272,61 @@ Import the pre-built Grafana dashboard:
 1. **Never commit secrets**: Use environment variables or secret managers
 2. **Encrypt data**: At rest and in transit
 3. **Implement RBAC**: Role-based access control for each layer
-4. **Audit access**: Log all data access for compliance
+4. **Audit access**: Log all data access for compliance (see Unity Catalog)
 5. **Data masking**: Mask PII in non-production environments
+
+## 🗂️ Data Governance with Unity Catalog
+
+Unity Catalog provides comprehensive governance for your lakehouse:
+
+### Features
+
+- **Metadata Management**: Centralized catalog of all tables, schemas, and columns
+- **Lineage Tracking**: Automatic tracking of data flow through Bronze → Silver → Gold
+- **Audit Logging**: Complete audit trail of all data access and operations
+- **Data Quality**: Track quality checks and metrics over time
+
+### Quick Example
+
+```python
+from pipelines.governed_pipeline import GovernedLakehousePipeline
+
+# Use governed pipeline for automatic governance
+with GovernedLakehousePipeline(user="admin") as pipeline:
+    result = pipeline.run_full_pipeline(
+        source_file="data/sample_customers.csv",
+        dataset_name="customers",
+        group_by_field="region"
+    )
+    
+    # Show detailed governance information
+    pipeline.show_table_info("silver", "customers")
+```
+
+### CLI Tools
+
+```bash
+# View governance summary
+python3 governance/catalog_cli.py summary
+
+# Describe a table
+python3 governance/catalog_cli.py describe silver customers
+
+# View lineage
+python3 governance/catalog_cli.py lineage gold customers_by_region
+
+# Check access history
+python3 governance/catalog_cli.py access silver customers
+
+# View quality checks
+python3 governance/catalog_cli.py quality silver customers
+```
+
+See the **[Unity Catalog Guide](docs/UNITY_CATALOG.md)** for complete documentation.
 
 ## 📚 Documentation
 
+- **[Unity Catalog Guide](docs/UNITY_CATALOG.md)** - Complete governance documentation
 - **[End-to-End Test Guide](docs/END_TO_END_TEST.md)** - Tracer bullet implementation and usage
 - [Quick Reference](docs/QUICK_REFERENCE.md) - Condensed cheat sheet for common tasks
 - [Architecture Overview](docs/ARCHITECTURE.md) - Detailed architecture documentation

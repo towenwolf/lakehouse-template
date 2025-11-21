@@ -71,6 +71,9 @@ airflow.db
 airflow.cfg
 logs/
 
+# Unity Catalog governance database
+governance/catalog.db
+
 # Terraform
 *.tfstate
 *.tfstate.*
