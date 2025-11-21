@@ -20,6 +20,9 @@ This template provides a production-ready foundation for implementing a lakehous
 
 ## 🚀 Quick Start
 
+> **🏠 New to Lakehouse? Want a Local Setup?**  
+> Check out the **[Local Setup Runbook](docs/LOCAL_SETUP_RUNBOOK.md)** for a complete guide to building a free, open-source lakehouse on your local machine (no cloud required, <100 GB scale). Uses DuckDB, MinIO, and other 100% free tools!
+
 ### 0. Test Drive (Tracer Bullet)
 
 Start with a minimal end-to-end test to see the lakehouse architecture in action:
@@ -326,6 +329,7 @@ See the **[Unity Catalog Guide](docs/UNITY_CATALOG.md)** for complete documentat
 
 ## 📚 Documentation
 
+- **[Local Setup Runbook](docs/LOCAL_SETUP_RUNBOOK.md)** - Complete guide for local, cloud-free lakehouse setup (<100 GB)
 - **[Unity Catalog Guide](docs/UNITY_CATALOG.md)** - Complete governance documentation
 - **[End-to-End Test Guide](docs/END_TO_END_TEST.md)** - Tracer bullet implementation and usage
 - [Quick Reference](docs/QUICK_REFERENCE.md) - Condensed cheat sheet for common tasks
