@@ -5,7 +5,7 @@ Records who accessed what data and when
 
 import sqlite3
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -308,9 +308,7 @@ class AuditLogger:
         """
         cursor = self.conn.cursor()
         
-        start_date = datetime.now()
-        from datetime import timedelta
-        start_date = (start_date - timedelta(days=days)).isoformat()
+        start_date = (datetime.now() - timedelta(days=days)).isoformat()
         
         # Count by access type
         cursor.execute("""

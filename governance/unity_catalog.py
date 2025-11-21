@@ -46,6 +46,7 @@ class UnityCatalog:
     
     def _initialize_default_structure(self):
         """Create default lakehouse catalog structure"""
+        import sqlite3
         try:
             # Create main catalog
             self.metadata.create_catalog(
@@ -65,7 +66,7 @@ class UnityCatalog:
                     owner=self.current_user,
                     properties={"layer": layer}
                 )
-        except Exception:
+        except (sqlite3.IntegrityError, ValueError):
             # Already exists, skip
             pass
     

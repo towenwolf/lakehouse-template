@@ -113,7 +113,7 @@ class MetadataStore:
         now = datetime.now().isoformat()
         
         cursor.execute("""
-            INSERT INTO catalogs (catalog_name, description, owner, created_at, updated_at, properties)
+            INSERT OR IGNORE INTO catalogs (catalog_name, description, owner, created_at, updated_at, properties)
             VALUES (?, ?, ?, ?, ?, ?)
         """, (name, description, owner, now, now, json.dumps(properties or {})))
         
@@ -222,7 +222,7 @@ class MetadataStore:
             return None
         
         table = dict(row)
-        table['properties'] = json.loads(table['properties'])
+        table['properties'] = json.loads(table['properties']) if table.get('properties') else {}
         
         # Get columns
         cursor.execute("""

@@ -13,6 +13,9 @@ from typing import Dict, List, Optional
 class LineageTracker:
     """Track data lineage and dependencies"""
     
+    # Default limit for query results
+    DEFAULT_RESULT_LIMIT = 100
+    
     def __init__(self, db_path: str = "governance/catalog.db"):
         """
         Initialize lineage tracker
@@ -198,7 +201,7 @@ class LineageTracker:
         visited = set()
         to_visit = [(table_name, 0)]
         
-        while to_visit and len(upstream) < 100:  # Limit results
+        while to_visit and len(upstream) < self.DEFAULT_RESULT_LIMIT:
             current_table, depth = to_visit.pop(0)
             
             if current_table in visited or depth > max_depth:
@@ -241,7 +244,7 @@ class LineageTracker:
         visited = set()
         to_visit = [(table_name, 0)]
         
-        while to_visit and len(downstream) < 100:  # Limit results
+        while to_visit and len(downstream) < self.DEFAULT_RESULT_LIMIT:
             current_table, depth = to_visit.pop(0)
             
             if current_table in visited or depth > max_depth:

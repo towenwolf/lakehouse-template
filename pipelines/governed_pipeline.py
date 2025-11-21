@@ -174,7 +174,7 @@ class GovernedLakehousePipeline(SimpleLakehousePipeline):
         
         duration = time.time() - start_time
         file_size = os.path.getsize(silver_file)
-        quality_score = len(deduplicated) / len(bronze_records) if bronze_records else 0
+        data_retention_rate = len(deduplicated) / len(bronze_records) if bronze_records else 0
         
         # Detect columns from first record
         columns = []
@@ -193,7 +193,7 @@ class GovernedLakehousePipeline(SimpleLakehousePipeline):
             row_count=len(deduplicated),
             size_bytes=file_size,
             properties={
-                "quality_score": quality_score,
+                "data_retention_rate": data_retention_rate,
                 "duplicates_removed": duplicate_count,
                 "null_ids_removed": null_ids
             }
@@ -210,7 +210,7 @@ class GovernedLakehousePipeline(SimpleLakehousePipeline):
             metadata={
                 "duplicates_removed": duplicate_count,
                 "null_records_removed": null_ids,
-                "quality_score": quality_score
+                "data_retention_rate": data_retention_rate
             }
         )
         
@@ -253,7 +253,7 @@ class GovernedLakehousePipeline(SimpleLakehousePipeline):
         )
         
         print(f"[SILVER] Processed {len(deduplicated)} clean records "
-              f"(quality: {quality_score:.1%}) to {silver_file}")
+              f"(retention: {data_retention_rate:.1%}) to {silver_file}")
         print(f"[GOVERNANCE] Registered table in catalog: silver.{dataset_name}")
         print(f"[GOVERNANCE] Logged 2 quality checks")
         
