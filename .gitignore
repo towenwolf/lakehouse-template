@@ -49,6 +49,7 @@ data/gold/*
 !data/bronze/.gitkeep
 !data/silver/.gitkeep
 !data/gold/.gitkeep
+!data/sample_customers.csv
 
 # Temporary files
 tmp/
