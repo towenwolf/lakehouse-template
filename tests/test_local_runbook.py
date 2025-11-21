@@ -75,7 +75,7 @@ def test_runbook_code_examples():
     
     # Count code blocks
     code_block_count = content.count("```")
-    assert code_block_count >= 40, f"Should have at least 20 code blocks (found {code_block_count // 2} pairs)"
+    assert code_block_count >= 40, f"Should have at least 40 code blocks (found {code_block_count // 2} pairs)"
     
     # Check for specific code examples
     assert "docker-compose" in content, "Should have docker-compose examples"
