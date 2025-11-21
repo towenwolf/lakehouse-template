@@ -19,6 +19,20 @@ This template provides a production-ready foundation for implementing a lakehous
 
 ## 🚀 Quick Start
 
+### 0. Test Drive (Tracer Bullet)
+
+Start with a minimal end-to-end test to see the lakehouse architecture in action:
+
+```bash
+# Run the simple end-to-end test (no dependencies required)
+python3 tests/test_end_to_end.py
+
+# Or run the pipeline directly
+python3 pipelines/simple_pipeline.py
+```
+
+This validates the Bronze → Silver → Gold flow using only Python standard library and local file storage. See [End-to-End Test Guide](docs/END_TO_END_TEST.md) for details.
+
 ### 1. Use This Template
 
 Click the "Use this template" button on GitHub to create a new repository from this template.
@@ -233,6 +247,7 @@ Import the pre-built Grafana dashboard:
 
 ## 📚 Documentation
 
+- **[End-to-End Test Guide](docs/END_TO_END_TEST.md)** - Tracer bullet implementation and usage
 - [Quick Reference](docs/QUICK_REFERENCE.md) - Condensed cheat sheet for common tasks
 - [Architecture Overview](docs/ARCHITECTURE.md) - Detailed architecture documentation
 - [Getting Started](docs/GETTING_STARTED.md) - Step-by-step setup guide
