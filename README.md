@@ -25,9 +25,12 @@ Start with a minimal end-to-end test to see the lakehouse architecture in action
 
 ```bash
 # Run the simple end-to-end test (no dependencies required)
+bash scripts/run-e2e-test.sh
+
+# Or run directly with Python
 python3 tests/test_end_to_end.py
 
-# Or run the pipeline directly
+# Or run the pipeline standalone
 python3 pipelines/simple_pipeline.py
 ```
 

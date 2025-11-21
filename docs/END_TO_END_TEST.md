@@ -21,8 +21,41 @@ The lakehouse template includes a minimal but complete implementation that demon
 ### Architecture
 
 ```
-Source CSV → Bronze (JSON) → Silver (JSON) → Gold (JSON)
-             Raw Data         Cleaned Data     Aggregated Data
+┌─────────────────────┐
+│  Source CSV File    │
+│  14 records         │
+│  (with duplicates   │
+│   and invalid data) │
+└──────────┬──────────┘
+           │
+           │ Ingest
+           ▼
+┌─────────────────────┐
+│   BRONZE LAYER      │
+│   (Raw JSON)        │
+│   14 records        │
+│   + metadata        │
+└──────────┬──────────┘
+           │
+           │ Clean & Validate
+           ▼
+┌─────────────────────┐
+│   SILVER LAYER      │
+│   (Cleaned JSON)    │
+│   12 records        │
+│   (85.7% quality)   │
+│   - duplicates      │
+│   - invalid data    │
+└──────────┬──────────┘
+           │
+           │ Aggregate
+           ▼
+┌─────────────────────┐
+│   GOLD LAYER        │
+│   (Aggregated JSON) │
+│   4 aggregates      │
+│   (by region)       │
+└─────────────────────┘
 ```
 
 ### Components
